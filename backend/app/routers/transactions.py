@@ -14,7 +14,7 @@ from app.schemas.transaction import (
     TransactionListResponse,
     TransactionStats,
 )
-from app.services.auth import get_current_merchant, get_merchant_by_api_key
+from app.services.auth import get_current_merchant, get_merchant_by_api_key, get_current_merchant_flexible
 from app.services.fraud import calculate_fraud_score
 from app.services.webhook import enqueue_webhook
 from app.config import get_settings
@@ -43,7 +43,7 @@ def format_transaction(txn: Transaction) -> TransactionResponse:
 async def create_transaction(
     request: TransactionCreate,
     db: AsyncSession = Depends(get_db),
-    merchant: Merchant = Depends(get_current_merchant),
+    merchant: Merchant = Depends(get_current_merchant_flexible),
 ):
     """
     Log a new payment transaction.
@@ -101,7 +101,7 @@ async def list_transactions(
     status_filter: str | None = Query(None, alias="status"),
     search: str | None = Query(None),
     db: AsyncSession = Depends(get_db),
-    merchant: Merchant = Depends(get_current_merchant),
+    merchant: Merchant = Depends(get_current_merchant_flexible),
 ):
     """List transactions with pagination and optional filters."""
     query = select(Transaction).where(Transaction.merchant_id == merchant.id)
@@ -138,7 +138,7 @@ async def list_transactions(
 @router.get("/stats", response_model=TransactionStats)
 async def get_stats(
     db: AsyncSession = Depends(get_db),
-    merchant: Merchant = Depends(get_current_merchant),
+    merchant: Merchant = Depends(get_current_merchant_flexible),
 ):
     """Get transaction statistics for the dashboard."""
     merchant_filter = Transaction.merchant_id == merchant.id
@@ -203,7 +203,7 @@ async def get_stats(
 async def get_transaction(
     transaction_id: str,
     db: AsyncSession = Depends(get_db),
-    merchant: Merchant = Depends(get_current_merchant),
+    merchant: Merchant = Depends(get_current_merchant_flexible),
 ):
     """Get a single transaction by ID."""
     result = await db.execute(

@@ -1,11 +1,29 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, Field, field_validator
+import re
 
 
 class RegisterRequest(BaseModel):
     """Schema for merchant registration."""
-    email: str
-    password: str
-    business_name: str
+    email: str = Field(..., min_length=3)
+    password: str = Field(..., min_length=8)
+    business_name: str = Field(..., min_length=1)
+
+    @field_validator("email")
+    @classmethod
+    def validate_email(cls, v: str) -> str:
+        v = v.strip()
+        if not re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", v):
+            raise ValueError("Invalid email format")
+        return v
+
+    @field_validator("business_name")
+    @classmethod
+    def validate_business_name(cls, v: str) -> str:
+        v = v.strip()
+        if len(v) == 0:
+            raise ValueError("Business name cannot be empty")
+        return v
+
 
 
 class LoginRequest(BaseModel):

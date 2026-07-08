@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
 from app.models.merchant import Merchant
-from app.services.auth import get_current_merchant
+from app.services.auth import get_current_merchant_flexible
 
 router = APIRouter(prefix="/webhooks", tags=["Webhooks"])
 
@@ -21,7 +21,7 @@ class WebhookResponse(BaseModel):
 
 
 @router.get("", response_model=WebhookResponse)
-async def get_webhook(merchant: Merchant = Depends(get_current_merchant)):
+async def get_webhook(merchant: Merchant = Depends(get_current_merchant_flexible)):
     """Get current webhook configuration."""
     return WebhookResponse(
         webhook_url=merchant.webhook_url,
@@ -33,7 +33,7 @@ async def get_webhook(merchant: Merchant = Depends(get_current_merchant)):
 async def update_webhook(
     config: WebhookConfig,
     db: AsyncSession = Depends(get_db),
-    merchant: Merchant = Depends(get_current_merchant),
+    merchant: Merchant = Depends(get_current_merchant_flexible),
 ):
     """Set or update the webhook URL for transaction notifications."""
     merchant.webhook_url = config.webhook_url
@@ -49,7 +49,7 @@ async def update_webhook(
 @router.delete("", response_model=WebhookResponse)
 async def delete_webhook(
     db: AsyncSession = Depends(get_db),
-    merchant: Merchant = Depends(get_current_merchant),
+    merchant: Merchant = Depends(get_current_merchant_flexible),
 ):
     """Remove the webhook URL."""
     merchant.webhook_url = None

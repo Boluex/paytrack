@@ -68,3 +68,25 @@ async def get_me(merchant: Merchant = Depends(get_current_merchant)):
         is_active=merchant.is_active,
         created_at=merchant.created_at.isoformat(),
     )
+
+
+@router.post("/regenerate-api-key", response_model=MerchantResponse)
+async def regenerate_api_key(
+    db: AsyncSession = Depends(get_db),
+    merchant: Merchant = Depends(get_current_merchant),
+):
+    """Regenerate the merchant's API key."""
+    import uuid
+    merchant.api_key = f"pk_{uuid.uuid4().hex}"
+    db.add(merchant)
+    await db.flush()
+    return MerchantResponse(
+        id=merchant.id,
+        email=merchant.email,
+        business_name=merchant.business_name,
+        api_key=merchant.api_key,
+        webhook_url=merchant.webhook_url,
+        is_active=merchant.is_active,
+        created_at=merchant.created_at.isoformat(),
+    )
+

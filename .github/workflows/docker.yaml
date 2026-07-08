@@ -25,7 +25,7 @@ jobs:
     if: >-
       github.event_name == 'push' ||
       github.event.inputs.service == 'all' ||
-      github.event.inputs.service == 'frontend' ||
+      github.event.inputs.service == 'frontend' 
     outputs:
       image: ${{ steps.build.outputs.image }}
     steps:
@@ -60,7 +60,7 @@ jobs:
     if: >-
       github.event_name == 'push' ||
       github.event.inputs.service == 'all' ||
-      github.event.inputs.service == 'backend' ||
+      github.event.inputs.service == 'backend' 
     outputs:
       image: ${{ steps.build.outputs.image }}
     steps:

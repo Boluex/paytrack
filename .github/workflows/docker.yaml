@@ -44,7 +44,8 @@ jobs:
         with:
           context: ./frontend
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/paytrack-frontend:latest && \
+          tags: |
+                ${{ secrets.DOCKERHUB_USERNAME }}/paytrack-frontend:latest 
                 ${{ secrets.DOCKERHUB_USERNAME }}/paytrack-frontend:${{github.run_number}}.0
 
 
@@ -80,7 +81,8 @@ jobs:
         with:
           context: ./backend
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/paytrack-backend:latest && \
+          tags: |
+                ${{ secrets.DOCKERHUB_USERNAME }}/paytrack-backend:latest 
                 ${{ secrets.DOCKERHUB_USERNAME }}/paytrack-backend:${{github.run_number}}.0
 
       - name: Scan with trivy

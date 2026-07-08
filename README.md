@@ -1,8 +1,8 @@
-# 💳 PayTrack — Payment Transaction Monitor
+#  PayTrack — Payment Transaction Monitor
 
 A full-stack payment monitoring platform where merchants register, log transactions via API, view real-time dashboards, receive webhook notifications, and get alerted to suspicious activity through automated fraud detection.
 
-## 🏗️ Architecture
+##  Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -26,7 +26,7 @@ A full-stack payment monitoring platform where merchants register, log transacti
   └──────────┘     └───────────┘    └───────────┘
 ```
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 - Docker & Docker Compose
@@ -66,7 +66,7 @@ npm install
 npm run dev
 ```
 
-## 📡 API Reference
+##  API Reference
 
 ### Authentication
 
@@ -117,7 +117,7 @@ curl http://localhost:8000/api/transactions/stats \
   -H "Authorization: Bearer $TOKEN"
 ```
 
-## 🔒 Fraud Detection
+##  Fraud Detection
 
 Transactions are automatically scored against three rules:
 
@@ -132,7 +132,7 @@ Transactions are automatically scored against three rules:
 
 Fraud reasons are stored on each transaction for audit.
 
-## 🪝 Webhooks
+##  Webhooks
 
 When a merchant sets a webhook URL, PayTrack sends an HTTP POST for each new transaction:
 
@@ -151,14 +151,14 @@ When a merchant sets a webhook URL, PayTrack sends an HTTP POST for each new tra
 - **Retries**: 3 attempts with exponential backoff
 - **Timeout**: 10 seconds per attempt
 
-## 🛡️ Rate Limiting
+##  Rate Limiting
 
 - **100 requests per minute** per IP address
 - Implemented via Redis sliding window middleware
 - Returns `429 Too Many Requests` when exceeded
 - Health check (`/api/health`) is excluded
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 PayTrack/
@@ -211,7 +211,7 @@ PayTrack/
 └── README.md
 ```
 
-## ⚙️ Environment Variables
+##  Environment Variables
 
 | Variable | Default | Description |
 |----------|---------|-------------|
@@ -225,7 +225,7 @@ PayTrack/
 | `FRAUD_AMOUNT_MULTIPLIER` | `3.0` | Flag if > Nx average |
 | `FRAUD_SCORE_THRESHOLD` | `70` | Auto-flag score threshold |
 
-## ✅ What's Built
+##  What's Built
 
 - [x] Merchant registration & JWT authentication
 - [x] API key generation (per merchant)
@@ -253,7 +253,7 @@ PayTrack/
 - [ ] **CI/CD pipeline** — GitHub Actions for test + build + deploy
 - [ ] **Production hardening** — HTTPS, proper secret management, connection pooling tuning
 
-## 🧑‍💻 Contributing
+##  Contributing
 
 1. Fork the repo
 2. Create a feature branch: `git checkout -b feature/my-feature`
@@ -261,6 +261,6 @@ PayTrack/
 4. Run tests: `pytest` (backend) / `npm test` (frontend)
 5. Submit a PR
 
-## 📄 License
+##  License
 
 MIT

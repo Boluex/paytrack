@@ -1,0 +1,92 @@
+name: Docker Build and Push
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - "backend/**"
+      - "frontend/**"
+      - ".github/workflows/docker.yaml"
+  workflow_dispatch:
+    inputs:
+      service:
+        description: "Service to deploy"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - all
+          - frontend
+          - backend
+
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+    if: >-
+      github.event_name == 'push' ||
+      github.event.inputs.service == 'all' ||
+      github.event.inputs.service == 'frontend' ||
+    outputs:
+      image: ${{ steps.build.outputs.image }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Docker Build and Push
+        uses: docker/build-push-action@v5
+        working-directory: ./frontend
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/paytrack-frontend:latest && \
+                ${{ secrets.DOCKERHUB_USERNAME }}/paytrack-frontend:${{github.run_number}}.0
+
+
+      - name: Scan with trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/paytrack-frontend:${{github.run_number}}.0
+          format: table
+          exit-code: 1
+          severity: CRITICAL
+
+  build-backend:
+    runs-on: ubuntu-latest
+    if: >-
+      github.event_name == 'push' ||
+      github.event.inputs.service == 'all' ||
+      github.event.inputs.service == 'backend' ||
+    outputs:
+      image: ${{ steps.build.outputs.image }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Docker Build and Push
+        uses: docker/build-push-action@v5
+        working-directory: ./backend
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/paytrack-backend:latest && \
+                ${{ secrets.DOCKERHUB_USERNAME }}/paytrack-backend:${{github.run_number}}.0
+
+      - name: Scan with trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/paytrack-backend:${{github.run_number}}.0
+          format: table
+          exit-code: 1
+          severity: CRITICAL

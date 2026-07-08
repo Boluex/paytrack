@@ -225,33 +225,7 @@ PayTrack/
 | `FRAUD_AMOUNT_MULTIPLIER` | `3.0` | Flag if > Nx average |
 | `FRAUD_SCORE_THRESHOLD` | `70` | Auto-flag score threshold |
 
-##  What's Built
 
-- [x] Merchant registration & JWT authentication
-- [x] API key generation (per merchant)
-- [x] Transaction logging with full CRUD
-- [x] Dashboard with stats + area charts (Recharts)
-- [x] Paginated transaction table with status filters + search
-- [x] Fraud detection engine (velocity, anomaly, duplicate)
-- [x] Webhook delivery via Redis queue with retries
-- [x] Redis rate limiting middleware
-- [x] Premium dark theme with glassmorphism UI
-- [x] Docker Compose for full stack
-- [x] API documentation (FastAPI /docs)
-
-## 🔲 What's Remaining (for other developers/agents)
-
-- [ ] **Alembic migrations** — currently using `create_all()`, need proper migration files
-- [ ] **API key authentication** — transactions currently require JWT; add API key header auth option
-- [ ] **Unit tests** — pytest for backend, Vitest for frontend
-- [ ] **Password reset flow** — forgot password email + reset endpoint
-- [ ] **Merchant settings page** — UI for webhook config, regenerate API key
-- [ ] **Transaction export** — CSV/PDF export of transaction history
-- [ ] **Email notifications** — SMTP integration for fraud alerts
-- [ ] **WebSocket real-time updates** — live transaction feed on dashboard
-- [ ] **Kubernetes manifests** — Helm chart or raw manifests for production
-- [ ] **CI/CD pipeline** — GitHub Actions for test + build + deploy
-- [ ] **Production hardening** — HTTPS, proper secret management, connection pooling tuning
 
 ##  Contributing
 

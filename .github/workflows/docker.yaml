@@ -92,3 +92,42 @@ jobs:
           format: table
           exit-code: 0
           severity: CRITICAL
+
+
+  update-manifest:
+  needs: [build-frontend, build-backend]
+  if: always() && (needs.build-frontend.result == 'success' || needs.build-backend.result == 'success')
+  runs-on: ubuntu-latest
+  environment: DockerHub
+  steps:
+    - name: Checkout manifest repo
+      uses: actions/checkout@v4
+      with:
+        repository: https://github.com/Boluex/paytrack-cloud
+        ref: master
+        token: ${{ secrets.MANIFEST_REPO_TOKEN }}
+        
+
+    - name: Update frontend image tag
+      if: needs.build-frontend.result == 'success'
+      run: |
+        sed -i -E "s#image: .*paytrack-frontend:.*#image: ${{ secrets.DOCKERHUB_USERNAME }}/paytrack-frontend:${{ github.run_number }}.0#" fe-depl.yaml
+
+    - name: Update backend image tag
+      if: needs.build-backend.result == 'success'
+      run: |
+        sed -i -E "s#image: .*paytrack-backend:.*#image: ${{ secrets.DOCKERHUB_USERNAME }}/paytrack-backend:${{ github.run_number }}.0#" be-depl.yaml
+
+    - name: Commit and push changes
+      run: |
+        git config user.email "awomewekolawole1@gmail.com"
+        git config user.name "Boluex"
+        if [ -n "$(git status --porcelain fe-depl.yaml be-depl.yaml)" ]; then
+          git add fe-depl.yaml be-depl.yaml
+          git commit -m "chore: update image tags to version ${{ github.run_number }}.0 [skip ci]"
+          git push origin master
+        else
+          echo "No changes detected. Skipping push."
+        fi
+
+

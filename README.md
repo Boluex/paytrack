@@ -2,31 +2,8 @@
 
 A full-stack payment monitoring platform where merchants register, log transactions via API, view real-time dashboards, receive webhook notifications, and get alerted to suspicious activity through automated fraud detection.
 
-##  Architecture
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Frontend (React + Vite)                    │
-│   Login │ Register │ Dashboard │ Transactions                │
-│   Port: 5173                                                 │
-└──────────────────────┬──────────────────────────────────────┘
-                       │ HTTP (Axios)
-┌──────────────────────▼──────────────────────────────────────┐
-│                   Backend (FastAPI)                           │
-│   /api/auth/*  │  /api/transactions/*  │  /api/webhooks/*    │
-│   JWT Auth     │  Fraud Detection      │  Redis Queue        │
-│   Rate Limiting (Redis middleware)                            │
-│   Port: 8000                                                 │
-└──────┬────────────────┬─────────────────┬───────────────────┘
-       │                │                 │
-  ┌────▼────┐     ┌─────▼─────┐    ┌─────▼─────┐
-  │PostgreSQL│     │   Redis   │    │  Webhook  │
-  │  :5432   │     │   :6379   │    │  Delivery │
-  │  Data    │     │Cache/Queue│    │  (httpx)  │
-  └──────────┘     └───────────┘    └───────────┘
-```
-
-##  Quick Start
+##  Start
 
 ### Prerequisites
 - Docker & Docker Compose
